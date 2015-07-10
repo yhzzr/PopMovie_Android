@@ -40,7 +40,6 @@ public class CustomArrayAdapter extends ArrayAdapter<String> {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.movie_info, parent, false);
 
         ImageView moviePoster = (ImageView) view.findViewById(R.id.movie_poster);
-
         Picasso.with(context).load(myUri).into(moviePoster);
 
         return view;

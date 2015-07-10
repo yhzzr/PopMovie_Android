@@ -63,8 +63,11 @@ public class SearchMovie extends Fragment{
                                                  R.layout.movie_info,
                                                  movieInfo);
         View rootView = inflater.inflate(R.layout.overview,container,false);
+
         ImageView imageView = (ImageView) rootView.findViewById(R.id.imageView);
-        Picasso.with(getActivity()).load("http://i.imgur.com/DvpvklR.png").into(imageView);
+        Picasso.with(getActivity()).load("http://i.imgur.com/DvpvklR.png").resize(1,1).centerCrop().into(imageView);
+
+
         GridView gridView = (GridView) rootView.findViewById(R.id.grid);
         gridView.setAdapter(mMovieAdapter);
 
