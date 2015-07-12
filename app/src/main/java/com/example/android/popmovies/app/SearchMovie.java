@@ -1,5 +1,6 @@
 package com.example.android.popmovies.app;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 
@@ -71,17 +73,15 @@ public class SearchMovie extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                Bundle savedInstanceState){
 
-        String[] data = {
-                "/5JU9ytZJyR3zmClGmVm9q4Geqbd.jpg",
-                "/uXZYawqUsChGSj54wcuBtEdUJbh.jpg",
-                "/kqjL17yufvn9OVLyXYpvtyrFfak.jpg",
-                "/s5uMY8ooGRZOL0oe4sIvnlTsYQO.jpg",
-                "/qey0tdcOp9kCDdEZuJ87yE3crSe.jpg",
-                "/A7HtCxFe7Ms8H7e7o2zawppbuDT.jpg",
-                "/aMEsvTUklw0uZ3gk3Q6lAj6302a.jpg",
+        Movie[] data = {
+                new Movie("/uXZYawqUsChGSj54wcuBtEdUJbh.jpg",
+                          "Jurassic World",
+                          "2015-06-12",
+                          "Twenty-two years after the events of Jurassic Park, Isla Nublar now features a fully functioning dinosaur theme park, Jurassic World, as originally envisioned by John Hammond.",
+                        7.0)
         };
 
-        List<String>  movieInfo= new ArrayList<>(Arrays.asList(data));
+        List<Movie>  movieInfo= new ArrayList<>(Arrays.asList(data));
 
         mMovieAdapter = new CustomArrayAdapter(getActivity(),
                                                  R.layout.movie_info,
@@ -93,15 +93,28 @@ public class SearchMovie extends Fragment{
 
         GridView gridView = (GridView) rootView.findViewById(R.id.grid);
         gridView.setAdapter(mMovieAdapter);
-
+        gridView.setOnItemClickListener(new GridView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l){
+                Movie movie = mMovieAdapter.getItem(position);
+                Bundle extras = new Bundle();
+                extras.putString("POSTER",movie.getPosterpath());
+                extras.putString("TITLE", movie.getTitle());
+                extras.putString("RELEASE", movie.getRelease_date());
+                extras.putString("PLOT", movie.getPlot());
+                extras.putDouble("RATING", movie.getRating());
+                Intent showDetail = new Intent(getActivity(), DetailActivity.class).putExtras(extras);
+                startActivity(showDetail);
+            }
+        });
         return rootView;
     }
 
-    public class FetchPopularTask extends AsyncTask<Void,Void,String[]>{
+    public class FetchPopularTask extends AsyncTask<Void,Void,Movie[]>{
 
         private final String LOG_TAG = FetchPopularTask.class.getSimpleName();
 
-        private String[] getPosterPathFromJson(String resultJsonStr)
+        private Movie[] getPosterPathFromJson(String resultJsonStr)
                 throws JSONException{
 
             final String OWM_RESULTS = "results";
@@ -115,24 +128,20 @@ public class SearchMovie extends Fragment{
             JSONObject resultJson = new JSONObject(resultJsonStr);
             JSONArray movieArray = resultJson.getJSONArray(OWM_RESULTS);
 
-            String[] resultStrs = new String[movieArray.length()];
+            Movie[] movies = new Movie[movieArray.length()];
             for(int i = 0; i < movieArray.length(); i++){
-                String poster;
-
                 JSONObject movie = movieArray.getJSONObject(i);
-                poster = movie.getString(OWM_POSTER_PATH);
-                resultStrs[i] = poster;
+                movies[i] = new Movie(movie.getString(OWM_POSTER_PATH),
+                        movie.getString(OWM_TITLE),
+                        movie.getString(OWM_RELEASE_DATE),
+                        movie.getString(OWM_OVERVIEW),
+                        movie.getDouble(OWM_VOTE_AVERAGE));
             }
-
-            for(String s:resultStrs){
-                Log.v(LOG_TAG, "Movie entry: " + s);
-            }
-
-            return resultStrs;
+            return movies;
         }
 
         @Override
-        protected String[] doInBackground(Void... params){
+        protected Movie[] doInBackground(Void... params){
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -193,22 +202,22 @@ public class SearchMovie extends Fragment{
         }
 
         @Override
-        protected void onPostExecute(String[] result){
+        protected void onPostExecute(Movie[] result){
             if(result != null){
                 mMovieAdapter.clear();
-                for(String movieStr:result){
-                    mMovieAdapter.add(movieStr);
+                for(Movie movie:result){
+                    mMovieAdapter.add(movie);
                 }
             }
         }
 
     }
 
-    public class FetchRatedTask extends AsyncTask<Void,Void,String[]>{
+    public class FetchRatedTask extends AsyncTask<Void,Void,Movie[]>{
 
         private final String LOG_TAG = FetchRatedTask.class.getSimpleName();
 
-        private String[] getPosterPathFromJson(String resultJsonStr)
+        private Movie[] getPosterPathFromJson(String resultJsonStr)
                 throws JSONException{
 
             final String OWM_RESULTS = "results";
@@ -222,31 +231,26 @@ public class SearchMovie extends Fragment{
             JSONObject resultJson = new JSONObject(resultJsonStr);
             JSONArray movieArray = resultJson.getJSONArray(OWM_RESULTS);
 
-            String[] resultStrs = new String[movieArray.length()];
             Movie[] movies = new Movie[movieArray.length()];
 
             //get data from JSONArray
             for(int i = 0; i < movieArray.length(); i++){
                     JSONObject movie = movieArray.getJSONObject(i);
-                    movies[i] = new Movie(movie.getString(OWM_POSTER_PATH), movie.getDouble(OWM_VOTE_AVERAGE));
+                    movies[i] = new Movie(movie.getString(OWM_POSTER_PATH),
+                                          movie.getString(OWM_TITLE),
+                                          movie.getString(OWM_RELEASE_DATE),
+                                          movie.getString(OWM_OVERVIEW),
+                                          movie.getDouble(OWM_VOTE_AVERAGE));
             }
 
             //sorting the array
             InsertionSort.sort(movies);
 
-            for(int i=0; i<movieArray.length(); i++){
-                resultStrs[i] = movies[i].getPosterpath();
-            }
-
-            for(String s:resultStrs){
-                Log.v(LOG_TAG, "Movie entry: " + s);
-            }
-
-            return resultStrs;
+            return movies;
         }
 
         @Override
-        protected String[] doInBackground(Void... params){
+        protected Movie[] doInBackground(Void... params){
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -307,11 +311,11 @@ public class SearchMovie extends Fragment{
         }
 
         @Override
-        protected void onPostExecute(String[] result){
+        protected void onPostExecute(Movie[] result){
             if(result != null){
                 mMovieAdapter.clear();
-                for(String movieStr:result){
-                    mMovieAdapter.add(movieStr);
+                for(Movie movie:result){
+                    mMovieAdapter.add(movie);
                 }
             }
         }

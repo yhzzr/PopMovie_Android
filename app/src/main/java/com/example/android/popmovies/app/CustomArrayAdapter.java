@@ -15,15 +15,15 @@ import java.util.List;
 /**
  * Created by hengyang on 07/10/15.
  */
-public class CustomArrayAdapter extends ArrayAdapter<String> {
+public class CustomArrayAdapter extends ArrayAdapter<Movie> {
 
     final String BASE_URL = "http://image.tmdb.org/t/p/";
     final String SIZE = "w500";
 
     private Activity context;
-    private List<String> poster_paths;
+    private List<Movie> poster_paths;
 
-    public CustomArrayAdapter(Activity context, int resource, List<String> poster_paths){
+    public CustomArrayAdapter(Activity context, int resource, List<Movie> poster_paths){
         super(context, resource, poster_paths);
         this.context = context;
         this.poster_paths = poster_paths;
@@ -32,8 +32,8 @@ public class CustomArrayAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
 
-        String PATH = getItem(position);
-        String poster_path = BASE_URL+SIZE+PATH;
+        Movie PATH = getItem(position);
+        String poster_path = BASE_URL+SIZE+PATH.getPosterpath();
         Uri myUri = Uri.parse(poster_path);
 
 

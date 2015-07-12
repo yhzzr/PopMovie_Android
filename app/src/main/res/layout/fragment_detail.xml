@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.android.popmovies.app.DetailActivityFragment">
+
+    <TextView
+        android:text="Movie Title"
+        android:textSize="35dp"
+        android:id="@+id/title"
+        android:textColor="@android:color/white"
+        android:background="#00796B"
+        android:paddingLeft="20dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@id/title"/>
+
+    <ImageView
+        android:id="@+id/poster"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        android:src="@drawable/erro"
+        android:layout_margin="5dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/title"/>
+
+    <TextView
+        android:text="Release Date"
+        android:id="@+id/releasedate"
+        android:textColor="#424242"
+        android:textSize="27dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/poster"
+        android:layout_below="@id/title"/>
+
+    <TextView
+        android:text="Rating"
+        android:id="@+id/rating"
+        android:textColor="#424242"
+        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/poster"
+        android:layout_below="@id/releasedate"/>
+
+    <TextView
+        android:text="A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival."
+        android:id="@+id/plot"
+        android:textColor="#424242"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/poster"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"/>
+
+
+</RelativeLayout>
