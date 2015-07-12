@@ -1,8 +1,7 @@
 package com.example.android.popmovies.app;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
 
@@ -16,13 +15,6 @@ public class MainActivity extends ActionBarActivity {
             getSupportFragmentManager().beginTransaction().
                     add(R.id.container, new SearchMovie()).commit();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
     }
 
     @Override
