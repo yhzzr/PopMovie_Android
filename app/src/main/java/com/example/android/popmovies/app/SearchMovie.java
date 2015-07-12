@@ -74,11 +74,10 @@ public class SearchMovie extends Fragment{
                                Bundle savedInstanceState){
 
         Movie[] data = {
-                new Movie("/uXZYawqUsChGSj54wcuBtEdUJbh.jpg",
-                          "Jurassic World",
-                          "2015-06-12",
-                          "Twenty-two years after the events of Jurassic Park, Isla Nublar now features a fully functioning dinosaur theme park, Jurassic World, as originally envisioned by John Hammond.",
-                        7.0)
+                new Movie("/uXZYawqUsChGSj54wcuBtEdUJbh.jpg","Jurassic World","2015-06-12","Twenty-two years after the events of Jurassic Park, Isla Nublar now features a fully functioning dinosaur theme park, Jurassic World, as originally envisioned by John Hammond.", 7.0),
+                new Movie("/5JU9ytZJyR3zmClGmVm9q4Geqbd.jpg","Terminator Genisys","2015-07-01","The year is 2029. John Connor, leader of the resistance continues the war against the machines. At the Los Angeles offensive, John's fears of the unknown future begin to emerge when TECOM spies reveal a new plot by SkyNet that will attack him from both fronts; past and future, and will ultimately change warfare forever.",6.3),
+                new Movie("/s5uMY8ooGRZOL0oe4sIvnlTsYQO.jpg","Minions","2015-07-10","Minions Stuart, Kevin and Bob are recruited by Scarlet Overkill, a super-villain who, alongside her inventor husband Herb, hatches a plot to take over the world.",7.4),
+                new Movie("/kqjL17yufvn9OVLyXYpvtyrFfak.jpg","Mad Max: Fury Road","2015-05-15","An apocalyptic story set in the furthest reaches of our planet, in a stark desert landscape where humanity is broken, and most everyone is crazed fighting for the necessities of life. Within this world exist two rebels on the run who just might be able to restore order. There's Max, a man of action and a man of few words, who seeks peace of mind following the loss of his wife and child in the aftermath of the chaos. And Furiosa, a woman of action and a woman who believes her path to survival may be achieved if she can make it across the desert back to her childhood homeland.",7.8),
         };
 
         List<Movie>  movieInfo= new ArrayList<>(Arrays.asList(data));
