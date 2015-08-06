@@ -10,7 +10,7 @@ import android.provider.BaseColumns;
  */
 public class MovieContract {
 
-    public static final String CONTENT_AUTHORITY = "com.example.android.sunshine.app";
+    public static final String CONTENT_AUTHORITY = "com.example.android.popmovies.app";
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
@@ -31,12 +31,18 @@ public class MovieContract {
         public static final String TABLE_NAME = "trailer";
 
         public static final String COLUMN_TRAILER_ID = "trailer_id";
+        public static final String COLUMN_MOVIE_ID = "movie_id";
         public static final String COLUMN_TRAILER_NAME = "name";
         public static final String COLUMN_TRAILER_KEY = "key";
         public static final String COLUMN_TRAILER_TYPE = "type";
+        public static final String COLUMN_TRAILER_SITE = "site";
 
         public static Uri buildTrailerUri(long id){
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildTrailerMovie(String movieName){
+            return CONTENT_URI.buildUpon().appendPath(movieName).build();
         }
     }
 
@@ -51,11 +57,17 @@ public class MovieContract {
         public static final String TABLE_NAME = "review";
 
         public static final String COLUMN_REVIEW_ID = "review_id";
+        public static final String COLUMN_MOVIE_ID = "movie_id";
+        public static final String COLUMN_REVIEW_AUTHOR = "author";
         public static final String COLUMN_REVIEW_CONTENT = "content";
         public static final String COLUMN_REVIEW_URL = "url";
 
         public static Uri buildReviewUri(long id){
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static Uri buildReviewMovie(String movieName){
+            return CONTENT_URI.buildUpon().appendPath(movieName).build();
         }
     }
 
@@ -78,8 +90,7 @@ public class MovieContract {
         public static final String COLUMN_POSTER = "poster";
         public static final String COLUMN_RATING = "rating";
         public static final String COLUMN_PLOT = "plot";
-        public static final String COLUMN_TRAILER_ID = "trailer_id";
-        public static final String COLUMN_REVIEW_ID = "review_id";
+        public static final String COLUMN_MOVIE_ID = "movie_id";
 
         public static Uri buildMovieUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -87,6 +98,10 @@ public class MovieContract {
 
         public static Uri buildMovieTitle(String movieTitle) {
             return CONTENT_URI.buildUpon().appendPath(movieTitle).build();
+        }
+
+        public static String getMovieTitleFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
         }
     }
 }
