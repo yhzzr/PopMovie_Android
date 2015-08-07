@@ -96,11 +96,11 @@ public class MovieContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        public static Uri buildMovieTitle(String movieTitle) {
-            return CONTENT_URI.buildUpon().appendPath(movieTitle).build();
+        public static Uri buildMovieId(String movieId) {
+            return CONTENT_URI.buildUpon().appendPath(movieId).build();
         }
 
-        public static String getMovieTitleFromUri(Uri uri) {
+        public static String getMovieIdFromUri(Uri uri) {
             return uri.getPathSegments().get(1);
         }
     }

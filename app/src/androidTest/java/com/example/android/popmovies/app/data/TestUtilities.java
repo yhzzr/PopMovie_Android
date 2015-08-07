@@ -33,7 +33,7 @@ public class TestUtilities extends AndroidTestCase {
         for(Map.Entry<String, Object> entry : valueSet){
             String columnName = entry.getKey();
             int idx = valueCursor.getColumnIndex(columnName);
-            assertFalse("Colum '" + columnName + "' not found. " + error, idx == -1);
+            assertFalse("Column '" + columnName + "' not found. " + error, idx == -1);
             String expectedValue = entry.getValue().toString();
             assertEquals("Value '" + entry.getValue().toString() +
                     "' did not match the expected value '" +
@@ -41,7 +41,7 @@ public class TestUtilities extends AndroidTestCase {
         }
     }
 
-    static ContentValues createReviewValues(long movieId) {
+    static ContentValues createReviewValues(String movieId) {
         ContentValues reviewValues = new ContentValues();
         reviewValues.put(MovieContract.ReviewEntry.COLUMN_REVIEW_ID, "55910381c3a36807f900065d");
         reviewValues.put(MovieContract.ReviewEntry.COLUMN_MOVIE_ID, movieId);
@@ -52,7 +52,7 @@ public class TestUtilities extends AndroidTestCase {
         return reviewValues;
     }
 
-    static ContentValues createTrailerValues(long movieId) {
+    static ContentValues createTrailerValues(String movieId) {
         ContentValues trailerValues = new ContentValues();
         trailerValues.put(MovieContract.TrailerEntry.COLUMN_MOVIE_ID, movieId);
         trailerValues.put(MovieContract.TrailerEntry.COLUMN_TRAILER_ID, "5576eac192514111e4001b03");

@@ -8,19 +8,19 @@ import android.test.AndroidTestCase;
  */
 public class TestMovieContract extends AndroidTestCase {
 
-    private static final String TEST_MOVIE_TITLE = "/Jurassic Park";
+    private static final String TEST_MOVIE_ID = "123456";
 
 
-    public void testBuildMovieTitle(){
-        Uri movieUri = MovieContract.MovieEntry.buildMovieTitle(TEST_MOVIE_TITLE);
+    public void testBuildMovieId(){
+        Uri movieUri = MovieContract.MovieEntry.buildMovieId(TEST_MOVIE_ID);
         assertNotNull("Error: Null Uri returned.  You must fill-in buildMovieLocation in " +
                         "MovieContract.",
                 movieUri);
         assertEquals("Error: Movie location not properly appended to the end of the Uri",
-                TEST_MOVIE_TITLE, movieUri.getLastPathSegment());
+                TEST_MOVIE_ID, movieUri.getLastPathSegment());
         assertEquals("Error: Movie location Uri doesn't match our expected result",
                 movieUri.toString(),
-                "content://com.example.android.popmovies.app/movie/%2FJurassic%20Park");
+                "content://com.example.android.popmovies.app/movie/123456");
 
     }
 }

@@ -127,7 +127,7 @@ public class TestProvider extends AndroidTestCase {
         ContentValues testValues = TestUtilities.createMinionMovieValues();
         long movieId = TestUtilities.insertMinionMovieValues(mContext);
 
-        ContentValues reviewValues = TestUtilities.createReviewValues(movieId);
+        ContentValues reviewValues = TestUtilities.createReviewValues(TestUtilities.TEST_MOVIE);
 
         long reviewRowId = db.insert(ReviewEntry.TABLE_NAME, null, reviewValues);
         assertTrue("Unable to Insert ReviewEntry into the Database", reviewRowId != -1);
@@ -152,7 +152,7 @@ public class TestProvider extends AndroidTestCase {
         ContentValues testValues = TestUtilities.createMinionMovieValues();
         long movieId = TestUtilities.insertMinionMovieValues(mContext);
 
-        ContentValues trailerValues = TestUtilities.createTrailerValues(movieId);
+        ContentValues trailerValues = TestUtilities.createTrailerValues(TestUtilities.TEST_MOVIE);
 
         long trailerRowId = db.insert(TrailerEntry.TABLE_NAME, null, trailerValues);
         assertTrue("Unable to Insert ReviewEntry into the Database", trailerRowId != -1);
@@ -263,7 +263,7 @@ public class TestProvider extends AndroidTestCase {
                 cursor, testValues);
 
         //Test Insert Review
-        /*ContentValues reviewValues = TestUtilities.createReviewValues(movieRowId);
+        ContentValues reviewValues = TestUtilities.createReviewValues(TestUtilities.TEST_MOVIE);
         tco = TestUtilities.getTestContentObserver();
 
         mContext.getContentResolver().registerContentObserver(ReviewEntry.CONTENT_URI, true, tco);
@@ -288,19 +288,22 @@ public class TestProvider extends AndroidTestCase {
 
         reviewValues.putAll(testValues);
 
+        Uri uri = ReviewEntry.buildReviewMovie(TestUtilities.TEST_MOVIE);
+        Log.e(LOG_TAG, "The uri is " + uri.toString());
+
         reviewCursor = mContext.getContentResolver().query(
-                ReviewEntry.buildReviewMovie(TestUtilities.TEST_MOVIE),
-                null,
-                null,
-                null,
-                null
-        );
+                    ReviewEntry.buildReviewMovie(TestUtilities.TEST_MOVIE),
+                    null,
+                    null,
+                    null,
+                    null
+                );
         TestUtilities.validateCursor("testInsertReadProvider. Error validating joined Review and Movie Data.",
                 reviewCursor, reviewValues);
-*/
+
 
         //Test Insert Trailer
-        ContentValues trailerValues = TestUtilities.createTrailerValues(movieRowId);
+        ContentValues trailerValues = TestUtilities.createTrailerValues(TestUtilities.TEST_MOVIE);
         tco = TestUtilities.getTestContentObserver();
 
         mContext.getContentResolver().registerContentObserver(TrailerEntry.CONTENT_URI, true, tco);
@@ -334,9 +337,10 @@ public class TestProvider extends AndroidTestCase {
         );
         TestUtilities.validateCursor("testInsertReadProvider. Error validating joined Trailer and Movie Data.",
                 trailerCursor, trailerValues);
+
     }
 
-   /* public void testDeleteRecords() {
+    public void testDeleteRecords() {
         testInsertReadProvider();
 
         TestUtilities.TestContentObserver movieObserver = TestUtilities.getTestContentObserver();
@@ -357,7 +361,7 @@ public class TestProvider extends AndroidTestCase {
         mContext.getContentResolver().unregisterContentObserver(movieObserver);
         mContext.getContentResolver().unregisterContentObserver(reviewObserver);
         mContext.getContentResolver().unregisterContentObserver(trailerObserver);
-    }*/
+    }
 
 
 }

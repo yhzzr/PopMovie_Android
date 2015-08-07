@@ -71,6 +71,38 @@ public class TestDb extends AndroidTestCase {
 
     public void testMovieTable() { insertMovie();}
 
+    public void testReviewTable() {
+        long movieRowId = insertMovie();
+
+        assertFalse("Error: Movie Not Inserted Correctly", movieRowId == -1L);
+
+        MovieDbHelper dbHelper = new MovieDbHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues reviewValues = TestUtilities.createReviewValues(TestUtilities.TEST_MOVIE);
+
+        long reviewRowId = db.insert(MovieContract.ReviewEntry.TABLE_NAME, null, reviewValues);
+        assertTrue(reviewRowId != -1);
+
+        Cursor reviewCursor = db.query(
+                MovieContract.ReviewEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        assertTrue("Error: No Records returned from review query", reviewCursor.moveToFirst());
+        TestUtilities.validateCurrentRecord("testInsertReadDb reviewEntry failed to validate",
+                reviewCursor, reviewValues);
+        assertFalse("Error: More than one record returned from review query",
+                reviewCursor.moveToNext());
+        reviewCursor.close();
+        dbHelper.close();
+    }
+
     public long insertMovie(){
         MovieDbHelper dbHelper = new MovieDbHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();

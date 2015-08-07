@@ -51,10 +51,10 @@ public class MovieProvider extends ContentProvider {
 
     private static final String sMovieSelection =
             MovieContract.MovieEntry.TABLE_NAME +
-                    "." + MovieContract.MovieEntry.COLUMN_TITLE + " = ? ";
+                    "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ? ";
 
     private Cursor getReviewByMovie(Uri uri, String[] projection, String sortOrder){
-        String movie = MovieContract.MovieEntry.getMovieTitleFromUri(uri);
+        String movie = MovieContract.MovieEntry.getMovieIdFromUri(uri);
 
         String[] selectionArgs = new String[]{movie};
         String selection = sMovieSelection;
@@ -70,7 +70,7 @@ public class MovieProvider extends ContentProvider {
     }
 
     private Cursor getTrailerByMovie(Uri uri, String[] projection, String sortOrder){
-        String movie = MovieContract.MovieEntry.getMovieTitleFromUri(uri);
+        String movie = MovieContract.MovieEntry.getMovieIdFromUri(uri);
 
         String[] selectionArgs = new String[]{movie};
         String selection = sMovieSelection;
