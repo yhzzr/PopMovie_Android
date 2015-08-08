@@ -33,9 +33,9 @@ public class MovieProvider extends ContentProvider {
                 MovieContract.ReviewEntry.TABLE_NAME + " INNER JOIN " +
                         MovieContract.MovieEntry.TABLE_NAME +
                         " ON " + MovieContract.ReviewEntry.TABLE_NAME +
-                        "." + MovieContract.ReviewEntry.COLUMN_MOVIE_ID +
+                        "." + MovieContract.ReviewEntry.COLUMN_MOVIE_KEY +
                         " = " + MovieContract.MovieEntry.TABLE_NAME +
-                        "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID);
+                        "." + MovieContract.MovieEntry._ID);
     }
 
     static{
@@ -44,9 +44,9 @@ public class MovieProvider extends ContentProvider {
                 MovieContract.TrailerEntry.TABLE_NAME + " INNER JOIN " +
                         MovieContract.MovieEntry.TABLE_NAME +
                         " ON " + MovieContract.TrailerEntry.TABLE_NAME +
-                        "." + MovieContract.TrailerEntry.COLUMN_MOVIE_ID +
+                        "." + MovieContract.TrailerEntry.COLUMN_MOVIE_KEY +
                         " = " + MovieContract.MovieEntry.TABLE_NAME +
-                        "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID);
+                        "." + MovieContract.MovieEntry._ID);
     }
 
     private static final String sMovieSelection =
@@ -303,7 +303,7 @@ public class MovieProvider extends ContentProvider {
                 int returnCount = 0;
                 try{
                     for(ContentValues value: values){
-                        long _id = db.insert(MovieContract.MovieEntry.TABLE_NAME,null, value );
+                        long _id = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, value );
                         if(_id != -1){
                             returnCount++;
                         }

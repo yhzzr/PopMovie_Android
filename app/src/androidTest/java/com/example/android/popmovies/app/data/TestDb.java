@@ -79,7 +79,7 @@ public class TestDb extends AndroidTestCase {
         MovieDbHelper dbHelper = new MovieDbHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        ContentValues reviewValues = TestUtilities.createReviewValues(TestUtilities.TEST_MOVIE);
+        ContentValues reviewValues = TestUtilities.createReviewValues(movieRowId);
 
         long reviewRowId = db.insert(MovieContract.ReviewEntry.TABLE_NAME, null, reviewValues);
         assertTrue(reviewRowId != -1);

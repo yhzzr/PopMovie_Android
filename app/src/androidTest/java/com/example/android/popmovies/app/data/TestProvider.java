@@ -125,9 +125,9 @@ public class TestProvider extends AndroidTestCase {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues testValues = TestUtilities.createMinionMovieValues();
-        long movieId = TestUtilities.insertMinionMovieValues(mContext);
+        long movieRowId = TestUtilities.insertMinionMovieValues(mContext);
 
-        ContentValues reviewValues = TestUtilities.createReviewValues(TestUtilities.TEST_MOVIE);
+        ContentValues reviewValues = TestUtilities.createReviewValues(movieRowId);
 
         long reviewRowId = db.insert(ReviewEntry.TABLE_NAME, null, reviewValues);
         assertTrue("Unable to Insert ReviewEntry into the Database", reviewRowId != -1);
@@ -150,9 +150,9 @@ public class TestProvider extends AndroidTestCase {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues testValues = TestUtilities.createMinionMovieValues();
-        long movieId = TestUtilities.insertMinionMovieValues(mContext);
+        long movieRowId = TestUtilities.insertMinionMovieValues(mContext);
 
-        ContentValues trailerValues = TestUtilities.createTrailerValues(TestUtilities.TEST_MOVIE);
+        ContentValues trailerValues = TestUtilities.createTrailerValues(movieRowId);
 
         long trailerRowId = db.insert(TrailerEntry.TABLE_NAME, null, trailerValues);
         assertTrue("Unable to Insert ReviewEntry into the Database", trailerRowId != -1);
@@ -263,7 +263,7 @@ public class TestProvider extends AndroidTestCase {
                 cursor, testValues);
 
         //Test Insert Review
-        ContentValues reviewValues = TestUtilities.createReviewValues(TestUtilities.TEST_MOVIE);
+        ContentValues reviewValues = TestUtilities.createReviewValues(movieRowId);
         tco = TestUtilities.getTestContentObserver();
 
         mContext.getContentResolver().registerContentObserver(ReviewEntry.CONTENT_URI, true, tco);
@@ -288,9 +288,6 @@ public class TestProvider extends AndroidTestCase {
 
         reviewValues.putAll(testValues);
 
-        Uri uri = ReviewEntry.buildReviewMovie(TestUtilities.TEST_MOVIE);
-        Log.e(LOG_TAG, "The uri is " + uri.toString());
-
         reviewCursor = mContext.getContentResolver().query(
                     ReviewEntry.buildReviewMovie(TestUtilities.TEST_MOVIE),
                     null,
@@ -303,7 +300,7 @@ public class TestProvider extends AndroidTestCase {
 
 
         //Test Insert Trailer
-        ContentValues trailerValues = TestUtilities.createTrailerValues(TestUtilities.TEST_MOVIE);
+        ContentValues trailerValues = TestUtilities.createTrailerValues(movieRowId);
         tco = TestUtilities.getTestContentObserver();
 
         mContext.getContentResolver().registerContentObserver(TrailerEntry.CONTENT_URI, true, tco);
@@ -363,5 +360,52 @@ public class TestProvider extends AndroidTestCase {
         mContext.getContentResolver().unregisterContentObserver(trailerObserver);
     }
 
+    static ContentValues[] createBulkInsertMovieValues() {
+        ContentValues[] returnContentValues = new ContentValues[3];
 
+        for(int i=0; i< 3; i++){
+            ContentValues movieValues = new ContentValues();
+            movieValues.put(MovieEntry.COLUMN_TITLE, "haha");
+            movieValues.put(MovieEntry.COLUMN_RELEASE_DATE, "haha");
+            movieValues.put(MovieEntry.COLUMN_POSTER, "haha");
+            movieValues.put(MovieEntry.COLUMN_RATING, "88");
+            movieValues.put(MovieEntry.COLUMN_PLOT, "good");
+            movieValues.put(MovieEntry.COLUMN_MOVIE_ID, "123" + i);
+            returnContentValues[i] = movieValues;
+        }
+
+        return returnContentValues;
+    }
+
+    public void testBulkInsert() {
+
+        ContentValues[] bulkInsertContentValues = createBulkInsertMovieValues();
+
+        TestUtilities.TestContentObserver movieObserver = TestUtilities.getTestContentObserver();
+        mContext.getContentResolver().registerContentObserver(MovieEntry.CONTENT_URI, true, movieObserver);
+
+        int insertCount = mContext.getContentResolver().bulkInsert(MovieEntry.CONTENT_URI, bulkInsertContentValues);
+        movieObserver.waitForNotificationOrFail();;
+        mContext.getContentResolver().unregisterContentObserver(movieObserver);
+
+        assertEquals(insertCount, 3);
+
+        Cursor cursor = mContext.getContentResolver().query(
+                MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+
+        assertEquals(cursor.getCount(), 3);
+
+        cursor.moveToFirst();
+        for(int i = 0; i< 3; i++, cursor.moveToNext()){
+            TestUtilities.validateCurrentRecord("testBulkInsert. Error validating MovieEntry " + i,
+                    cursor, bulkInsertContentValues[i]);
+        }
+
+        cursor.close();
+    }
 }

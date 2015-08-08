@@ -27,31 +27,31 @@ public class MovieDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_TRAILER_TABLE = "CREATE TABLE " + TrailerEntry.TABLE_NAME + " (" +
                 TrailerEntry._ID + " INTEGER PRIMARY KEY, " +
                 TrailerEntry.COLUMN_TRAILER_ID + " TEXT NOT NULL, " +
-                TrailerEntry.COLUMN_MOVIE_ID + " TEXT NOT NULL, " +
+                TrailerEntry.COLUMN_MOVIE_KEY + " INTEGER NOT NULL, " +
                 TrailerEntry.COLUMN_TRAILER_NAME + " TEXT NOT NULL, " +
                 TrailerEntry.COLUMN_TRAILER_KEY + " TEXT NOT NULL, " +
                 TrailerEntry.COLUMN_TRAILER_TYPE + " TEXT NOT NULL, " +
                 TrailerEntry.COLUMN_TRAILER_SITE + " TEXT NOT NULL, " +
 
-                " FOREIGN KEY (" + TrailerEntry.COLUMN_MOVIE_ID + ") REFERENCES " +
-                MovieEntry.TABLE_NAME + " (" + MovieEntry.COLUMN_MOVIE_ID + "), " +
+                " FOREIGN KEY (" + TrailerEntry.COLUMN_MOVIE_KEY + ") REFERENCES " +
+                MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + "), " +
 
                 " UNIQUE (" + TrailerEntry.COLUMN_TRAILER_ID + ", " +
-                TrailerEntry.COLUMN_MOVIE_ID + ") ON CONFLICT REPLACE);";
+                TrailerEntry.COLUMN_MOVIE_KEY + ") ON CONFLICT REPLACE);";
 
         final String SQL_CREATE_REVIEW_TABLE = "CREATE TABLE " + ReviewEntry.TABLE_NAME + " (" +
                 ReviewEntry._ID + " INTEGER PRIMARY KEY, " +
                 ReviewEntry.COLUMN_REVIEW_ID + " TEXT NOT NULL, " +
-                ReviewEntry.COLUMN_MOVIE_ID + " TEXT NOT NULL, " +
+                ReviewEntry.COLUMN_MOVIE_KEY + " INTEGER NOT NULL, " +
                 ReviewEntry.COLUMN_REVIEW_AUTHOR + " TEXT NOT NULL, " +
                 ReviewEntry.COLUMN_REVIEW_CONTENT + " TEXT NOT NULL, " +
                 ReviewEntry.COLUMN_REVIEW_URL + " TEXT NOT NULL, " +
 
-                " FOREIGN KEY (" + ReviewEntry.COLUMN_MOVIE_ID + ") REFERENCES " +
-                MovieEntry.TABLE_NAME + " (" + MovieEntry.COLUMN_MOVIE_ID + "), " +
+                " FOREIGN KEY (" + ReviewEntry.COLUMN_MOVIE_KEY + ") REFERENCES " +
+                MovieEntry.TABLE_NAME + " (" + MovieEntry._ID + "), " +
 
                 " UNIQUE (" + ReviewEntry.COLUMN_REVIEW_ID + ", " +
-                ReviewEntry.COLUMN_MOVIE_ID + ") ON CONFLICT REPLACE);";
+                ReviewEntry.COLUMN_MOVIE_KEY + ") ON CONFLICT REPLACE);";
 
         final String SQL_CREATE_MOVIE_TABLE = "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
                 MovieEntry._ID + " INTEGER PRIMARY KEY, " +

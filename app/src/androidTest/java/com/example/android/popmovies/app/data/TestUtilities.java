@@ -41,10 +41,10 @@ public class TestUtilities extends AndroidTestCase {
         }
     }
 
-    static ContentValues createReviewValues(String movieId) {
+    static ContentValues createReviewValues(long movieRowId) {
         ContentValues reviewValues = new ContentValues();
         reviewValues.put(MovieContract.ReviewEntry.COLUMN_REVIEW_ID, "55910381c3a36807f900065d");
-        reviewValues.put(MovieContract.ReviewEntry.COLUMN_MOVIE_ID, movieId);
+        reviewValues.put(MovieContract.ReviewEntry.COLUMN_MOVIE_KEY, movieRowId);
         reviewValues.put(MovieContract.ReviewEntry.COLUMN_REVIEW_AUTHOR, "jonlikesmoviesthatdontsuck");
         reviewValues.put(MovieContract.ReviewEntry.COLUMN_REVIEW_CONTENT, "Good movie");
         reviewValues.put(MovieContract.ReviewEntry.COLUMN_REVIEW_URL, "http://j.mp/1GHgSxi");
@@ -52,9 +52,9 @@ public class TestUtilities extends AndroidTestCase {
         return reviewValues;
     }
 
-    static ContentValues createTrailerValues(String movieId) {
+    static ContentValues createTrailerValues(long movieRowId) {
         ContentValues trailerValues = new ContentValues();
-        trailerValues.put(MovieContract.TrailerEntry.COLUMN_MOVIE_ID, movieId);
+        trailerValues.put(MovieContract.TrailerEntry.COLUMN_MOVIE_KEY, movieRowId);
         trailerValues.put(MovieContract.TrailerEntry.COLUMN_TRAILER_ID, "5576eac192514111e4001b03");
         trailerValues.put(MovieContract.TrailerEntry.COLUMN_TRAILER_NAME, "Official Trailer 3");
         trailerValues.put(MovieContract.TrailerEntry.COLUMN_TRAILER_SITE, "YouTube");
@@ -87,7 +87,7 @@ public class TestUtilities extends AndroidTestCase {
 
         assertTrue("Error: Failure to insert Minion Location Values", movieRowId != -1);
 
-        return testValues.getAsLong(MovieContract.MovieEntry.COLUMN_MOVIE_ID);
+        return movieRowId;
     }
 
     static class TestContentObserver extends ContentObserver {

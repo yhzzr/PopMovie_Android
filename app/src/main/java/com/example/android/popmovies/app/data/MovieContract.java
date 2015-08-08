@@ -31,7 +31,7 @@ public class MovieContract {
         public static final String TABLE_NAME = "trailer";
 
         public static final String COLUMN_TRAILER_ID = "trailer_id";
-        public static final String COLUMN_MOVIE_ID = "movie_id";
+        public static final String COLUMN_MOVIE_KEY = "movie_table_id";
         public static final String COLUMN_TRAILER_NAME = "name";
         public static final String COLUMN_TRAILER_KEY = "key";
         public static final String COLUMN_TRAILER_TYPE = "type";
@@ -57,7 +57,7 @@ public class MovieContract {
         public static final String TABLE_NAME = "review";
 
         public static final String COLUMN_REVIEW_ID = "review_id";
-        public static final String COLUMN_MOVIE_ID = "movie_id";
+        public static final String COLUMN_MOVIE_KEY = "movie_table_id";
         public static final String COLUMN_REVIEW_AUTHOR = "author";
         public static final String COLUMN_REVIEW_CONTENT = "content";
         public static final String COLUMN_REVIEW_URL = "url";
