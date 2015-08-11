@@ -23,6 +23,7 @@ public class MovieProvider extends ContentProvider {
     static final int REVIEW_WITH_NAME = 201;
     static final int REVIEW_WITH_NAME_AND_ID = 202;
     static final int MOVIE = 300;
+    static final int MOVIE_WITH_NAME = 301;
 
     private static final SQLiteQueryBuilder sReviewByMovieQueryBuilder;
     private static final SQLiteQueryBuilder sTrailerByMovieQueryBuilder;
@@ -85,12 +86,29 @@ public class MovieProvider extends ContentProvider {
         );
     }
 
+    private Cursor getMovieByID(Uri uri, String[] projection, String sortOrder){
+        String movie = MovieContract.MovieEntry.getMovieIdFromUri(uri);
+
+        String[] selectionArgs = new String[]{movie};
+        String selection = sMovieSelection;
+
+        return mOpenHelper.getReadableDatabase().query(
+                MovieContract.MovieEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MovieContract.CONTENT_AUTHORITY;
 
         matcher.addURI(authority, MovieContract.PATH_MOVIE, MOVIE);
-
+        matcher.addURI(authority, MovieContract.PATH_MOVIE + "/*", MOVIE_WITH_NAME);
         matcher.addURI(authority, MovieContract.PATH_TRAILER, TRAILER);
         matcher.addURI(authority, MovieContract.PATH_TRAILER + "/*", TRAILER_WITH_NAME);
         matcher.addURI(authority, MovieContract.PATH_TRAILER + "/*/#", TRAILER_WITH_NAME_AND_ID);
@@ -127,6 +145,8 @@ public class MovieProvider extends ContentProvider {
                 return MovieContract.ReviewEntry.CONTENT_ITEM_TYPE;
             case MOVIE:
                 return MovieContract.MovieEntry.CONTENT_TYPE;
+            case MOVIE_WITH_NAME:
+                return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -147,6 +167,12 @@ public class MovieProvider extends ContentProvider {
             case TRAILER_WITH_NAME:
             {
                 retCursor = getTrailerByMovie(uri, projection, sortOrder);
+                break;
+            }
+
+            case MOVIE_WITH_NAME:
+            {
+                retCursor = getMovieByID(uri, projection, sortOrder);
                 break;
             }
 

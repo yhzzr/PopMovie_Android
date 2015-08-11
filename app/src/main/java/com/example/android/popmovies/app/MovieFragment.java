@@ -1,5 +1,6 @@
 package com.example.android.popmovies.app;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -89,7 +90,13 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         gridView.setOnItemClickListener(new GridView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l){
-
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+                if(cursor != null) {
+                    Intent intent = new Intent(getActivity(), DetailActivity.class)
+                            .setData(MovieContract.MovieEntry.buildMovieId(cursor.getString(COL_MOVIE_MOVIE_ID)
+                            ));
+                    startActivity(intent);
+                }
             }
         });
 
