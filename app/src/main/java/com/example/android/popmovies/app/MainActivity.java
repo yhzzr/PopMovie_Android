@@ -13,7 +13,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         if(savedInstanceState == null){
             getSupportFragmentManager().beginTransaction().
-                    add(R.id.container, new SearchMovie()).commit();
+                    add(R.id.container, new MovieFragment()).commit();
         }
     }
 
@@ -31,4 +31,5 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
