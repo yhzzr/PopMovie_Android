@@ -30,23 +30,21 @@ public class MovieContract {
 
         public static final String TABLE_NAME = "trailer";
 
-        public static final String COLUMN_TRAILER_ID = "trailer_id";
         public static final String COLUMN_MOVIE_KEY = "movie_table_id";
         public static final String COLUMN_TRAILER_NAME = "name";
-        public static final String COLUMN_TRAILER_KEY = "key";
-        public static final String COLUMN_TRAILER_TYPE = "type";
-        public static final String COLUMN_TRAILER_SITE = "site";
+        public static final String COLUMN_TRAILER_SOURCE = "source";
 
         public static Uri buildTrailerUri(long id){
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        public static Uri buildTrailerMovie(String movieName){
-            return CONTENT_URI.buildUpon().appendPath(movieName).build();
+        public static Uri buildTrailerMovie(String movieId){
+            return CONTENT_URI.buildUpon().appendPath(movieId).build();
         }
     }
 
     public static final class ReviewEntry implements BaseColumns{
+
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_REVIEW).build();
         public static final String CONTENT_TYPE =
@@ -66,8 +64,8 @@ public class MovieContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        public static Uri buildReviewMovie(String movieName){
-            return CONTENT_URI.buildUpon().appendPath(movieName).build();
+        public static Uri buildReviewMovie(String movieId){
+            return CONTENT_URI.buildUpon().appendPath(movieId).build();
         }
     }
 

@@ -1,12 +1,16 @@
 package com.example.android.popmovies.app;
 
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,13 +22,19 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.example.android.popmovies.app.data.MovieContract;
+import com.example.android.popmovies.app.data.MovieDbHelper;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by hengyang on 07/09/15.
  */
 public class MovieFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final String LOG_TAG = DetailFragment.class.getSimpleName();
     private static final int MOVIE_LOADER = 0;
 
     private static final String[] MOVIE_COLUMNS = {
@@ -46,6 +56,11 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
     static final int COL_MOVIE_MOVIE_ID = 6;
 
     private MovieAdapter mMovieAdapter;
+
+    public interface Callback {
+
+        public void onItemSelected(Uri movieUri);
+    }
 
     public MovieFragment(){
     }
@@ -69,6 +84,49 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
             updateMovie();
             return true;
         }
+        if(id == R.id.reviewed){
+            MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor cursor = db.query(MovieContract.MovieEntry.TABLE_NAME,
+                    MOVIE_COLUMNS,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "rating DESC"
+                    );
+            mMovieAdapter.swapCursor(cursor);
+            db.close();
+        }
+        if(id == R.id.userfavorites){
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            Map<String,?> keys = prefs.getAll();
+            Set<String> movieSet = new HashSet<String>();
+
+            String selection = "movie_id=";
+
+            for (Map.Entry<String, ?> entry : keys.entrySet()) {
+                Log.d(LOG_TAG, entry.getValue().toString());
+                String mid = entry.getValue().toString();
+                movieSet.add(mid);
+                selection = selection + mid + " OR movie_id=";
+            }
+            if(selection.length()>13) {
+                selection = selection.substring(0, selection.length() - 13);
+
+                MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
+                SQLiteDatabase db = dbHelper.getReadableDatabase();
+                Cursor cursor = db.query(MovieContract.MovieEntry.TABLE_NAME,
+                        MOVIE_COLUMNS,
+                        selection,
+                        null,
+                        null,
+                        null,
+                        null);
+                mMovieAdapter.swapCursor(cursor);
+                db.close();
+            }
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -83,19 +141,32 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         ImageView imageView = (ImageView) rootView.findViewById(R.id.imageView);
         Picasso.with(getActivity()).load("http://i.imgur.com/DvpvklR.png").resize(1,1).centerCrop().into(imageView);
 
+        //set gridview that holds the movie_info layout
         GridView gridView = (GridView) rootView.findViewById(R.id.grid);
         gridView.setAdapter(mMovieAdapter);
 
+        updateMovie();
+        MovieDbHelper dbHelper = new MovieDbHelper(getActivity());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(MovieContract.MovieEntry.TABLE_NAME,
+                MOVIE_COLUMNS,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+        mMovieAdapter.swapCursor(cursor);
+
         //set the detail view here
-        gridView.setOnItemClickListener(new GridView.OnItemClickListener(){
+        gridView.setOnItemClickListener(new GridView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l){
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-                if(cursor != null) {
-                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-                            .setData(MovieContract.MovieEntry.buildMovieId(cursor.getString(COL_MOVIE_MOVIE_ID)
-                            ));
-                    startActivity(intent);
+                if (cursor != null) {
+                    ((Callback) getActivity())
+                            .onItemSelected(MovieContract.MovieEntry.buildMovieId(cursor.getString(COL_MOVIE_MOVIE_ID)));
                 }
             }
         });
@@ -116,13 +187,7 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        updateMovie();
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
 
         return new CursorLoader(getActivity(),
                 MovieContract.MovieEntry.CONTENT_URI,
@@ -131,11 +196,12 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
                 null,
                 null
         );
+
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        mMovieAdapter.swapCursor(cursor);
+                mMovieAdapter.swapCursor(cursor);
     }
 
     @Override

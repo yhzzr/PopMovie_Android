@@ -36,7 +36,7 @@ public class MovieProvider extends ContentProvider {
                         " ON " + MovieContract.ReviewEntry.TABLE_NAME +
                         "." + MovieContract.ReviewEntry.COLUMN_MOVIE_KEY +
                         " = " + MovieContract.MovieEntry.TABLE_NAME +
-                        "." + MovieContract.MovieEntry._ID);
+                        "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID);
     }
 
     static{
@@ -47,7 +47,7 @@ public class MovieProvider extends ContentProvider {
                         " ON " + MovieContract.TrailerEntry.TABLE_NAME +
                         "." + MovieContract.TrailerEntry.COLUMN_MOVIE_KEY +
                         " = " + MovieContract.MovieEntry.TABLE_NAME +
-                        "." + MovieContract.MovieEntry._ID);
+                        "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID);
     }
 
     private static final String sMovieSelection =
@@ -234,7 +234,7 @@ public class MovieProvider extends ContentProvider {
                 if(_id > 0)
                     returnUri = MovieContract.MovieEntry.buildMovieUri(_id);
                 else
-                    throw new android.database.SQLException("Failed to insert row into" + uri);
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }
             case REVIEW:{
